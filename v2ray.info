@@ -1,0 +1,8 @@
+PRGNAM="v2ray"
+VERSION="3.9"
+HOMEPAGE="https://www.v2ray.com"
+DOWNLOAD="https://github.com/v2ray/v2ray-core/releases/download/v${VERSION}/v2ray-linux-64.zip"
+SHA1SUM="1015f912d55b4f1f2af97278769da1a3f02c4628"
+REQUIRES=""
+MAINTAINER="MDrights"
+EMAIL="mdrights@tutanota.de"

@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=v2ray
+Name[zh_CN]=v2ray 翻墙神器
+Name[zh_HK]=v2ray 翻墙神器
+Name[zh_TW]=v2ray 翻墙神器
+Comment=A flexible and modular proxy tool
+Comment[zh_CN]=灵活的模块化代理工具
+Comment[zh_HK]=灵活的模块化代理工具
+Comment[zh_TW]=灵活的模块化代理工具
+Exec=/usr/local/bin/rc.v2ray -config $HOME/Desktop/v2ray.json
+Icon=v2ray
+StartupNotify=true
+Terminal=true
+Type=Application
+Categories=Network;
+

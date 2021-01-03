@@ -1,0 +1,122 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          v2ray
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: V2Ray proxy services
+# Description:       V2Ray proxy services
+### END INIT INFO
+
+# Acknowledgements: Isulew Li <netcookies@gmail.com>
+# Modified to suit Slackware's init system by MDrights <mdrights@tutanota.de>
+
+DESC=v2ray
+NAME=v2ray
+DAEMON=/usr/local/bin/v2ray
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/rc.d/rc.${NAME}
+
+OPTS="-config /etc/v2ray/config.json"
+
+# Exit if the package is not installed
+[ -x $DAEMON ] || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+# . /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+# . /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+    mkdir -p /var/log/v2ray
+    nohup $DAEMON $OPTS &
+    # Add code here, if necessary, that waits for the process to be ready
+    # to handle requests from services started subsequently which depend
+    # on this one.  As a last resort, sleep for some time.
+    RES="$?"
+    wait
+    [ "$RES" = 0 ] && echo "v2ray has been started successfully."
+
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+    # Return
+    #   0 if daemon has been stopped
+    #   1 if daemon was already stopped
+    #   2 if daemon could not be stopped
+    #   other if a failure occurred
+    killall -HUP v2ray
+    RETVAL="$?"
+    [ "$RETVAL" = 2 ] && return 2
+    # Wait for children to finish too if this is a daemon that forks
+    # and if the daemon is only ever run from this initscript.
+    # If the above conditions are not satisfied then add some other code
+    # that waits for the process to drop all resources that could be
+    # needed by services started subsequently.  A last resort is to
+    # sleep for some time.
+    # Many daemons don't delete their pidfiles when they exit.
+    rm -f $PIDFILE
+    return "$RETVAL"
+}
+
+#
+# Function that sends a SIGHUP to the daemon/service
+#
+do_reload() {
+    #
+    # If the daemon can reload its configuration without
+    # restarting (for example, when it is sent a SIGHUP),
+    # then implement that here.
+    #
+    killall -1 v2ray
+    [ "$RES" = 0 ] && echo "v2ray has been reloaded successfully."
+    return 0
+}
+
+case "$1" in
+  start)
+    [ "$VERBOSE" != no ] && echo "Starting $DESC " "$NAME"
+    do_start
+  ;;
+  stop)
+    [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+    do_stop
+  ;;
+  status)
+    if ps -ef |grep "python" |grep -v "grep"; then echo "        $NAME is running..."; else echo "        $NAME is NOT running..."; fi
+  ;;
+  reload|force-reload)
+    #
+    # If do_reload() is not implemented then leave this commented out
+    # and leave 'force-reload' as an alias for 'restart'.
+    #
+    do_reload
+  ;;
+  restart|force-reload)
+    #
+    # If the "reload" option is implemented then remove the
+    # 'force-reload' alias
+    #
+    do_stop
+    do_start
+  ;;
+  *)
+    #echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+    echo "Usage: $SCRIPTNAME {start|stop|status|reload|restart|force-reload}" >&2
+    exit 3
+  ;;
+esac

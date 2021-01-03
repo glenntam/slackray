@@ -1,0 +1,121 @@
+#!/bin/sh
+
+# Slackware build script for v2ray
+
+# Copyright 2017 MDrights <mdrights@tutanota.de>
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=v2ray
+VERSION=${VERSION:-3.9}
+BUILD=${BUILD:-1}
+TAG=${TAG:-_MD}
+
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i586 ;;
+    arm*) ARCH=arm ;;
+       *) ARCH=$( uname -m ) ;;
+  esac
+fi
+
+CWD=$(pwd)
+TMP=${TMP:-/tmp/SBo}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i586" ]; then
+  SLKCFLAGS="-O2 -march=i586 -mtune=i686"
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "i686" ]; then
+  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
+else
+  SLKCFLAGS="-O2"
+  LIBDIRSUFFIX=""
+fi
+
+set -e
+
+rm -rf $PKG
+mkdir -p $TMP $PKG $OUTPUT
+cd $TMP
+rm -rf $PRGNAM-$VERSION-linux-$LIBDIRSUFFIX
+unzip $CWD/$PRGNAM-linux-$LIBDIRSUFFIX.zip
+cd $PRGNAM-v$VERSION-linux-$LIBDIRSUFFIX
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+ -o -perm 511 \) -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+ -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+
+# It's pre-built, just need to copy-paste.
+mkdir -p $PKG/usr/local/bin
+cp v2ray $PKG/usr/local/bin/v2ray
+chmod 755 $PKG/usr/local/bin/v2ray
+
+# Copy and customize/randomize its config files.
+mkdir -p $PKG/etc/v2ray
+cp -a vpoint_vmess_freedom.json $PKG/etc/v2ray/vpoint_vmess_freedom.json 
+cp -a vpoint_socks_vmess.json $PKG/etc/v2ray/vpoint_socks_vmess.json 
+
+  let PORT=$RANDOM+10000
+  sed -i "s/10086/${PORT}/g" "$PKG/etc/v2ray/vpoint_vmess_freedom.json"
+
+  UUID=$(cat /proc/sys/kernel/random/uuid)
+  sed -i "s/23ad6b10-8d1a-40f7-8ad0-e3e35cd38297/${UUID}/g" "$PKG/etc/v2ray/vpoint_vmess_freedom.json"
+
+  let PORT=$RANDOM+10000
+  sed -i "s/10086/${PORT}/g" "$PKG/etc/v2ray/vpoint_socks_vmess.json"
+
+  UUID=$(cat /proc/sys/kernel/random/uuid)
+  sed -i "s/23ad6b10-8d1a-40f7-8ad0-e3e35cd38297/${UUID}/g" "$PKG/etc/v2ray/vpoint_socks_vmess.json"
+
+  #If you'd like to use (the) other config file(s), you'd better do the above like me :)
+
+# Make space for its log files.
+mkdir -p $PKG/var/log/v2ray
+
+# Its init script.
+mkdir -p $PKG/etc/rc.d/
+cp -a $CWD/rc.v2ray $PKG/etc/rc.d/
+chmod 755 $PKG/etc/rc.d/rc.v2ray
+
+# Logo
+mkdir -p $PKG/usr/share/pixmaps
+cp -a $CWD/v2ray-logo.png $PKG/usr/share/pixmaps/v2ray.png
+
+# .Desktop file
+mkdir -p $PKG/usr/share/applications
+cp -a $CWD/v2ray.desktop $PKG/usr/share/applications/
+
+mkdir -p $PKG/usr/doc/$PRGNAM
+cp -a readme.md $PKG/usr/doc/$PRGNAM
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM/$PRGNAM.SlackBuild
+
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
+
+cd $PKG
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
