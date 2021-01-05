@@ -56,14 +56,20 @@ else
   LIBDIRSUFFIX=""
 fi
 
+# new versions of v2ray don't untar into a seperate directory
+UNPACKPATH=$TMP/$PRGNAM-v$VERSION-linux-$LIBDIRSUFFIX
 set -e
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-$VERSION-linux-$LIBDIRSUFFIX
-unzip $CWD/$PRGNAM-linux-$LIBDIRSUFFIX.zip
-cd $PRGNAM-v$VERSION-linux-$LIBDIRSUFFIX
+#rm -rf $PRGNAM-$VERSION-linux-$LIBDIRSUFFIX
+rm -rf $UNPACKPATH
+mkdir $UNPACKPATH
+unzip $CWD/$PRGNAM-linux-$LIBDIRSUFFIX.zip -d $UNPACKPATH
+# new versions don't contain a readme, so cp it from the SlackBuild
+cp -a $CWD/README $UNPACKPATH
+cd $UNPACKPATH
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -113,7 +119,8 @@ mkdir -p $PKG/usr/share/applications
 cp -a $CWD/v2ray.desktop $PKG/usr/share/applications/
 
 mkdir -p $PKG/usr/doc/$PRGNAM
-cp -a readme.md $PKG/usr/doc/$PRGNAM
+#cp -a readme.md $PKG/usr/doc/$PRGNAM
+cp -a README $PKG/usr/doc/$PRGNAM
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
