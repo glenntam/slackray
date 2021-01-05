@@ -7,17 +7,30 @@ chmod 755 v2ray.SlackBuild
 . ./v2ray.SlackBuild
 installpkg $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 
+# Add rc.v2ray to startup at rc.local
 v2rdaemon="
 if [ -x /etc/rc.d/rc.v2ray ]; then
     /etc/rc.d/rc.v2ray
-fi
-"
-# add to daemon to rc.local startup if it doesn't exist
+fi"
+
 if [ -f /etc/rc.d/rc.local ]; then
-    if grep -Fx "$v2rdaemon" /etc/rc.d/rc.local; then
-        echo "v2ray deamon at boot already exists in rc.local"
-    else
-        printf '%s\n' "$v2rdaemon" >> /etc/rc.d/rc.local
-        echo "v2ray boot daemon added to rc.local"
-    fi
+    touch /etc/rc.d/rc.local
+    chmod +x /etc/rc.d/rc.local
+    echo "rc.local created"
 fi
+
+if [[ $(</etc/rc.d/rc.local) = *"$v2rdaemon"* ]]; then
+    echo "rc.local already loads v2ray"
+else
+    cp /etc/rc.d/rc.local /etc/rc.d/rc.local-original
+    chmod -x /etc/rc.d/rc.local-original
+    printf '%s\n' "$v2rdaemon" >> /etc/rc.d/rc.local
+    echo "v2ray loaded into rc.local, and rc.local-original created"
+fi
+
+# start v2ray now
+echo "Manually starting v2ray now:"
+/usr/local/bin/v2ray -config /etc/v2ray/config.json
+
+
+

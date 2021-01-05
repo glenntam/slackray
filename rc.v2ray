@@ -44,7 +44,7 @@ do_start()
     # to handle requests from services started subsequently which depend
     # on this one.  As a last resort, sleep for some time.
     RES="$?"
-    wait
+    #wait
     [ "$RES" = 0 ] && echo "v2ray has been started successfully."
 
 }
