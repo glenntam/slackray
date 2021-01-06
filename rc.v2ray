@@ -39,7 +39,8 @@ OPTS="-config /etc/v2ray/config.json"
 do_start()
 {
     mkdir -p /var/log/v2ray
-    nohup $DAEMON $OPTS &
+    # start daemon with custom config file and pipe all output to nohup log
+    nohup $DAEMON $OPTS > /var/log/v2ray/nohup.out 2>&1 &
     # Add code here, if necessary, that waits for the process to be ready
     # to handle requests from services started subsequently which depend
     # on this one.  As a last resort, sleep for some time.

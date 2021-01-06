@@ -10,10 +10,10 @@ installpkg $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 # Add rc.v2ray to startup at rc.local
 v2rdaemon="
 if [ -x /etc/rc.d/rc.v2ray ]; then
-    /etc/rc.d/rc.v2ray
+    /etc/rc.d/rc.v2ray start
 fi"
 
-if [ -f /etc/rc.d/rc.local ]; then
+if [ ! -f /etc/rc.d/rc.local ]; then
     touch /etc/rc.d/rc.local
     chmod +x /etc/rc.d/rc.local
     echo "rc.local created"
@@ -30,7 +30,7 @@ fi
 
 # start v2ray now
 echo "Manually starting v2ray now:"
-/usr/local/bin/v2ray -config /etc/v2ray/config.json
+/usr/local/bin/v2ray -config /etc/v2ray/config.json &
 
 
 
