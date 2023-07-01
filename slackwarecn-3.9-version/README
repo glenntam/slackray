@@ -1,6 +1,10 @@
-V2ray is a platform for building proxies to bypass network restrictions.
+#  Slackray is my v2ray platform for building proxies to bypass network restrictions for Slackware Linux.
+
 
 == Features ==
+Includes Slackbuild installer and SystemV startup scripts 
+
+Bypassing oppressive govt censorship since 2020
 
 Multiple proxy support
 
