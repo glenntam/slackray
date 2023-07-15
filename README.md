@@ -1,6 +1,8 @@
 # SlackRay is a v2ray implementation that runs on Slackware Linux. 
 A set of network tools that helps you to build your own computer network. It secures your network connections and protects your privacy.
 
+![SlackRay demonstration GIF](https://github.com/glenntam/slackray/blob/master/slackray.gif)
+
 ## Features
 
 ### Multiple proxy support
