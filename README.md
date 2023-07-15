@@ -1,28 +1,23 @@
 # SlackRay is a v2ray implementation that runs on Slackware Linux. 
+A set of network tools that helps you to build your own computer network. It secures your network connections and protects your privacy.
 
 ## Features
 
 ### Multiple proxy support
 
-SlackRay V2Ray supports Socks, HTTP, Shadowsocks and VMess protocol.
+Supports Socks, HTTP, Shadowsocks and VMess protocol.
 
-One V2Ray process can use different protocols on different ports at the same time;
+Can manage different protocols on different ports at the same time.
 By combining different inbound and outbound proxies, one can change traffic format dynamically.
 
 ### Multiple transport protocols
 
-All proxies above can be send/recieve over TLS, TCL, mKCP and more transport protocols.
-Flexible routing
-
-V2Ray has an internal router, which can be configured to proxy traffic, or send directly, or even block them.
-Multiple platforms
-
-V2Ray runs on many platforms; This Slackbuild supports Linux 2.6.23 and later
-(x86 / amd64 / arm / arm64 / mips64 / mips).
+All proxies above can send/receive over TLS, TCL, mKCP and more transport protocols.
+It has an internal router, which can be configured to proxy traffic, or send directly, or even block them.
 
 ## Requirements
 - SlackRay is made specifically for Slackware Linux. For Windows and Mac versions see here [instead](https://www.v2ray.com/en/welcome/install.html)
-- SlackRay ***does not*** require SystemD
+- SlackRay ***does not*** require SystemD, so it can also be adapted for other SysV distributions.
   
 ## Installation and Usage
 
