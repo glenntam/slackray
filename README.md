@@ -1,5 +1,5 @@
 # SlackRay is a v2ray implementation that runs on Slackware Linux. 
-A set of network tools that helps you to build your own computer network. It secures your network connections and protects your privacy.
+Allows you to create your own proxies underneath restrictive networks. It secures your network connections and protects your privacy.
 
 ![SlackRay demonstration GIF](https://github.com/glenntam/slackray/blob/master/slackray.gif)
 
@@ -18,8 +18,8 @@ All proxies above can send/receive over TLS, TCL, mKCP and more transport protoc
 It has an internal router, which can be configured to proxy traffic, or send directly, or even block them.
 
 ## Requirements
-- SlackRay is made specifically for Slackware Linux. For Windows and Mac versions see here [instead](https://www.v2ray.com/en/welcome/install.html)
-- SlackRay ***does not*** require SystemD, so it can also be adapted for other SysV distributions.
+- SlackRay is made specifically for Slackware Linux. For Windows and Mac versions see here [instead](https://www.v2ray.com/en/welcome/install.html).
+- SlackRay ***does not*** require SystemD, so you can also adapt it for other SysV distributions.
   
 ## Installation and Usage
 
